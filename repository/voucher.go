@@ -95,4 +95,38 @@ func (v VoucherRepository) FindById(ctx context.Context, id string) (*domain.Vou
 		return nil, err
 	}
 	return createdVoucher, nil
-} 
+}
+
+func (v VoucherRepository) FindAllByBrandId(ctx context.Context, brandId string) ([]*domain.Voucher, error) {
+	vouchers := []*domain.Voucher{}
+
+	rows, err := v.db.Query("SELECT id, brand_id, name, cost_in_point, stock, expiration_date FROM vouchers WHERE brand_id = ?",
+		brandId)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		voucher := &domain.Voucher{}
+		err := rows.Scan(
+			&voucher.Id,
+			&voucher.BrandId,
+			&voucher.Name,
+			&voucher.CostInPoint,
+			&voucher.Stock,
+			&voucher.ExpirationDate,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		vouchers = append(vouchers, voucher)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return vouchers, nil
+}
