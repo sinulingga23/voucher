@@ -22,7 +22,7 @@ https://www.postman.com/final-project-engineering-5/workspace/github-com-sinulin
 - MYSQL_DB_NAME
 
 # Integration Test
-Run: ```go test -v ./repository/ ./service/```
+After setting the env keys for DB. You can run the Integration Test using the command: ```go test -v ./repository/ ./service/```
 
 Output:
 ```=== RUN   TestBrandRepository_Create_Success
