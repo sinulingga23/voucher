@@ -20,7 +20,7 @@ func main() {
 	}
 
 	brandRepository := repository.NewBrandRepository(db)
-	voucherRepository := repository.NewVoucherRepositor(db)
+	voucherRepository := repository.NewVoucherRepository(db)
 
 	brandService := service.NewBrandService(brandRepository)
 	voucherService := service.NewVoucherService(voucherRepository, brandRepository)

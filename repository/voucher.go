@@ -13,7 +13,7 @@ type VoucherRepository struct {
 	db *sql.DB
 }
 
-func NewVoucherRepositor(db *sql.DB) VoucherRepository {
+func NewVoucherRepository(db *sql.DB) VoucherRepository {
 	return VoucherRepository{db: db}
 }
 
@@ -63,3 +63,36 @@ func (v VoucherRepository) Create(ctx context.Context, createVoucher domain.Crea
 
 	return createdVoucher, nil
 }
+
+func (b VoucherRepository) IsExistById(ctx context.Context, id string) bool {
+	check := 0
+
+	row := b.db.QueryRow("SELECT COUNT(id) FROM vouchers WHERE id = ?", id)
+
+	if err := row.Scan(&check); err != nil {
+		return false
+	}
+
+	if check == 0 {
+		return false
+	}
+
+	return true
+}
+
+func (v VoucherRepository) FindById(ctx context.Context, id string) (*domain.Voucher, error) {
+	createdVoucher := &domain.Voucher{}
+	row := v.db.QueryRow("SELECT id, brand_id, name, cost_in_point, stock, expiration_date FROM vouchers WHERE id = ?", id)
+	err := row.Scan(
+		&createdVoucher.Id,
+		&createdVoucher.BrandId,
+		&createdVoucher.Name,
+		&createdVoucher.CostInPoint,
+		&createdVoucher.Stock,
+		&createdVoucher.ExpirationDate,
+	)
+	if err != nil {
+		return nil, err
+	}
+	return createdVoucher, nil
+} 

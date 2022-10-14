@@ -18,7 +18,7 @@ func TestVoucherService_Create_Success(t *testing.T) {
 	}
 
 	brandRepository := repository.NewBrandRepository(db)
-	voucherRepository := repository.NewVoucherRepositor(db)
+	voucherRepository := repository.NewVoucherRepository(db)
 	voucherService := NewVoucherService(voucherRepository, brandRepository)
 
 	// Prepare New Brand for test purpose
