@@ -11,6 +11,7 @@ var (
 	// For Brand service.
 	ErrBrandNameIsEmpty = fmt.Errorf("Make sure the name of brand is not empty.")
 	ErrBrandLogoIsEmpty = fmt.Errorf("Make sure the url logo of brand is not empty.")
+	ErrBrandEmpty = fmt.Errorf("Brands is empty.")
 	
 	// For Voucher service.
 	ErrVoucherNotExists = fmt.Errorf("The Vouche is not exists.")

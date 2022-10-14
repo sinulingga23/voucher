@@ -85,3 +85,35 @@ func (v VoucherService) FindById(ctx context.Context, id string) (*payload.Vouch
 		ExpirationDate: currentVoucher.ExpirationDate,
 	}, nil
 }
+
+func (v VoucherService) FindAllByBrandId(ctx context.Context, brandId string) ([]*payload.Voucher, error) {
+	checkBrand := v.brandRepository.IsExistById(ctx, brandId)
+	if !checkBrand {
+		return nil, utility.ErrVoucherBrandIdNotExists
+	}
+
+	
+	vouchers, err := v.voucherRepository.FindAllByBrandId(ctx, brandId)
+	if err != nil {
+		return nil, utility.ErrInternalError
+	}
+
+	
+	if len(vouchers) == 0 {
+		return nil, utility.ErrBrandEmpty
+	}
+
+	result := []*payload.Voucher{}
+	for _,voucher := range vouchers {
+		result = append(result, &payload.Voucher{
+			Id: voucher.Id,
+			BrandId: voucher.BrandId,
+			Name: voucher.Name,
+			CostInPoint: voucher.CostInPoint,
+			Stock: voucher.Stock,
+			ExpirationDate: voucher.ExpirationDate,
+		})
+	}
+
+	return result, nil
+}

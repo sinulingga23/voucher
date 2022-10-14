@@ -66,3 +66,27 @@ func (h Handler) FindVoucherById(c *gin.Context) {
 	}{Data: *currentVoucher})
 	return
 }
+
+func (h Handler) FindAllVoucherByBrandId(c *gin.Context) {
+	brandId := c.Request.URL.Query().Get("brandId")
+	
+	vouchers, err := h.voucherService.FindAllByBrandId(context.TODO(), brandId)
+	if err != nil {
+		if err == utility.ErrVoucherBrandIdNotExists || err == utility.ErrBrandEmpty {
+			c.JSON(http.StatusNotFound, struct {
+				Message string `json:"message"`
+			}{Message: err.Error()})
+			return
+		}
+
+		c.JSON(http.StatusInternalServerError, struct {
+			Message string `json:"message"`
+		}{Message: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, struct {
+		Data []*payload.Voucher `json:"data"`
+	}{Data: vouchers})
+	return
+}
