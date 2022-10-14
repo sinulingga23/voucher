@@ -8,15 +8,15 @@ import (
 	"github.com/sinulingga23/voucher/domain"
 )
 
-type brandRepository struct {
+type BrandRepository struct {
 	db *sql.DB
 }
 
-func NewBrandRepository(db *sql.DB) brandRepository {
-	return brandRepository{db: db}
+func NewBrandRepository(db *sql.DB) BrandRepository {
+	return BrandRepository{db: db}
 }
 
-func (b brandRepository) Create(ctx context.Context,  createBrand domain.CreateBrand) (*domain.Brand, error) {
+func (b BrandRepository) Create(ctx context.Context,  createBrand domain.CreateBrand) (*domain.Brand, error) {
 	trx, err := b.db.Begin()
 	if err != nil {
 		return nil, err
