@@ -59,3 +59,19 @@ func (b BrandRepository) Create(ctx context.Context,  createBrand domain.CreateB
 
 	return createdBrand, nil
 }
+
+func (b BrandRepository) IsExistById(ctx context.Context, id string) bool {
+	check := 0
+
+	row := b.db.QueryRow("SELECT COUNT(id) FROM brands WHERE id = ?", id)
+
+	if err := row.Scan(&check); err != nil {
+		return false
+	}
+
+	if check == 0 {
+		return false
+	}
+
+	return true
+}
