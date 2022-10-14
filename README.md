@@ -6,6 +6,7 @@ https://www.postman.com/final-project-engineering-5/workspace/github-com-sinulin
 
 # Environment Keys
 - APP_ENV=<test|production>
+- MYSQL_DB_DRIVER=mysql
 
 ## If the APP_ENV=test. The env below should be set:
 - MYSQL_DB_TEST_USER
