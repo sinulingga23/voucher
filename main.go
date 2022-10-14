@@ -21,14 +21,17 @@ func main() {
 
 	brandRepository := repository.NewBrandRepository(db)
 	voucherRepository := repository.NewVoucherRepository(db)
+	transactionRepository := repository.NewTransactionRepository(db)
 
 	brandService := service.NewBrandService(brandRepository)
 	voucherService := service.NewVoucherService(voucherRepository, brandRepository)
+	transactionService := service.NewTransactionService(transactionRepository, voucherRepository)
 
-	handler := handler.NewHandler(brandService, voucherService)
+	handler := handler.NewHandler(brandService, voucherService, transactionService)
 
 	router.POST("/brand", handler.CreateBrand)
 	router.POST("/voucher", handler.CreateVoucher)
+	router.POST("/transaction/redemption", handler.CreateRedemption)
 
 	router.GET("/voucher", handler.FindVoucherById)
 	router.GET("/voucher/brand", handler.FindAllVoucherByBrandId)

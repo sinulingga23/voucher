@@ -14,7 +14,8 @@ var (
 	ErrBrandEmpty = fmt.Errorf("Brands is empty.")
 	
 	// For Voucher service.
-	ErrVoucherNotExists = fmt.Errorf("The Vouche is not exists.")
+	ErrVoucherNotExists = fmt.Errorf("The Voucher is not exists.")
+	ErrVoucherIsNotEnough = fmt.Errorf("The Voucher is not enough.")
 	ErrVoucherNameIsEmpty = fmt.Errorf("Make sure the name of voucher is not empty.")
 	ErrVoucherCostInInPointInvalid = fmt.Errorf("Make sure the cost in point of voucher is greater than 0.")
 	ErrVoucherStockInvalid = fmt.Errorf("Make sure the stock of voucher is greater than 0.")
