@@ -2,6 +2,7 @@ package payload
 
 type (
 	Redemption struct {
+		Id string `json:"id"`
 		VoucherId string `json:"voucherId"`
 		VoucherName string `json:"voucherName"`
 		Qtty int `json:"qtty"`

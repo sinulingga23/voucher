@@ -46,3 +46,20 @@ func (h Handler) CreateRedemption(c *gin.Context) {
 	}{Data: *redemption})
 	return
 }
+
+func (h Handler) FindRedemptionById(c *gin.Context) {
+	transactionId := c.Request.URL.Query().Get("transactionId")
+
+	redemption, err := h.transactionService.FindRedemptionById(context.TODO(), transactionId)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, struct {
+			Message string `json:"message"`
+		}{Message: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, struct {
+		Data payload.Redemption`json:"data"`
+	}{Data: *redemption})
+	return
+}

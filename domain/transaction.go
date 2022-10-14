@@ -2,6 +2,7 @@ package domain
 
 type (
 	Redemption struct {
+		Id string
 		VoucherId string
 		VoucherName string
 		Qtty int

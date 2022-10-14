@@ -47,7 +47,24 @@ func (t TransactionService) CreateRedemption(
 	}
 
 	return &payload.Redemption{
+		Id: redemption.Id,
 		VoucherId: redemption.VoucherId,
+		VoucherName: redemption.VoucherName,
+		Qtty: redemption.Qtty,
+		PointEachVoucher: redemption.PointEachVoucher,
+		TotalPoint: redemption.TotalPoint,
+	}, nil
+}
+
+func (t TransactionService) FindRedemptionById(ctx context.Context, id string) (*payload.Redemption, error) {
+	redemption, err := t.transactionRepository.FindById(ctx, id)
+	if err != nil {
+		return nil, utility.ErrInternalError
+	}
+
+	return &payload.Redemption{
+		Id: redemption.Id,
+		VoucherId: redemption.Id,
 		VoucherName: redemption.VoucherName,
 		Qtty: redemption.Qtty,
 		PointEachVoucher: redemption.PointEachVoucher,

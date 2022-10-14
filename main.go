@@ -35,6 +35,7 @@ func main() {
 
 	router.GET("/voucher", handler.FindVoucherById)
 	router.GET("/voucher/brand", handler.FindAllVoucherByBrandId)
+	router.GET("/transaction/redemption", handler.FindRedemptionById)
 
 	http.ListenAndServe(":8080", router)	
 }

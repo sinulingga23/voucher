@@ -70,10 +70,54 @@ func (t TransactionRepository) CreateRedemption(
 	}
 
 	return &domain.Redemption{
+		Id: id,
 		VoucherId: currentVoucher.Id,
 		VoucherName: currentVoucher.Name,
 		Qtty: createRedemption.Qtty,
 		PointEachVoucher: currentVoucher.CostInPoint,
 		TotalPoint: totalPoint,
 	}, nil
+}
+
+func (t TransactionRepository) FindById(ctx context.Context, id string) (*domain.Redemption, error) {
+	trx, err := t.db.Begin()
+	if err != nil {
+		return nil, err
+	}
+
+	currentRedemption := &domain.Redemption{}
+	row := trx.QueryRow("SELECT id, voucher_id, qtty, total_point FROM transactions WHERE id = ?", id)
+	err = row.Scan(
+		&currentRedemption.Id,
+		&currentRedemption.VoucherId,
+		&currentRedemption.Qtty,
+		&currentRedemption.TotalPoint,
+	)
+	if err != nil {
+		trx.Rollback()
+		return nil, err
+	}
+
+	if err := row.Err(); err != nil {
+		trx.Rollback()
+		return nil, err
+	}
+
+	row = trx.QueryRow("SELECT name, cost_in_point FROM vouchers WHERE id = ?", currentRedemption.VoucherId)
+	err = row.Scan(&currentRedemption.VoucherName, &currentRedemption.PointEachVoucher)
+	if err != nil {
+		trx.Rollback()
+		return nil, err
+	}
+
+	if err := row.Err(); err != nil {
+		trx.Rollback()
+		return nil, err
+	}
+
+	if err := trx.Commit(); err != nil {
+		return nil, err
+	}
+
+	return currentRedemption, nil
 }
