@@ -20,10 +20,15 @@ func main() {
 	}
 
 	brandRepository := repository.NewBrandRepository(db)
+	voucherRepository := repository.NewVoucherRepositor(db)
+
 	brandService := service.NewBrandService(brandRepository)
-	handler := handler.NewHandler(brandService)
+	voucherService := service.NewVoucherService(voucherRepository, brandRepository)
+
+	handler := handler.NewHandler(brandService, voucherService)
 
 	router.POST("/brand", handler.CreateBrand)
+	router.POST("/voucher", handler.CreateVoucher)
 
 	http.ListenAndServe(":8080", router)	
 }
