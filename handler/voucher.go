@@ -42,3 +42,27 @@ func (h Handler) CreateVoucher(c *gin.Context) {
 	}{Data: *createdVoucher})
 	return
 }
+
+func (h Handler) FindVoucherById(c *gin.Context) {
+	id := c.Request.URL.Query().Get("id")
+	
+	currentVoucher, err := h.voucherService.FindById(context.TODO(), id)
+	if err != nil {
+		if err == utility.ErrVoucherNotExists {
+			c.JSON(http.StatusNotFound, struct {
+				Message string `json:"message"`
+			}{Message: err.Error()})
+			return
+		}
+
+		c.JSON(http.StatusInternalServerError, struct {
+			Message string `json:"message"`
+		}{Message: err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, struct {
+		Data payload.Voucher `json:"data"`
+	}{Data: *currentVoucher})
+	return
+}

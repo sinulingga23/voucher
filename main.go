@@ -30,5 +30,7 @@ func main() {
 	router.POST("/brand", handler.CreateBrand)
 	router.POST("/voucher", handler.CreateVoucher)
 
+	router.GET("/voucher", handler.FindVoucherById)
+
 	http.ListenAndServe(":8080", router)	
 }

@@ -64,3 +64,24 @@ func (v VoucherService) Create(ctx context.Context, createVoucher payload.Create
 		ExpirationDate: createdVoucher.ExpirationDate,
 	}, nil
 }
+
+func (v VoucherService) FindById(ctx context.Context, id string) (*payload.Voucher, error) {
+	checkVoucher := v.voucherRepository.IsExistById(ctx, id)
+	if !checkVoucher {
+		return nil, utility.ErrVoucherNotExists
+	}
+
+	currentVoucher, err := v.voucherRepository.FindById(ctx, id)
+	if err != nil {
+		return nil, utility.ErrInternalError
+	}
+
+	return &payload.Voucher{
+		Id: currentVoucher.Id,
+		BrandId: currentVoucher.BrandId,
+		Name: currentVoucher.Name,
+		CostInPoint: currentVoucher.CostInPoint,
+		Stock: currentVoucher.Stock,
+		ExpirationDate: currentVoucher.ExpirationDate,
+	}, nil
+}
