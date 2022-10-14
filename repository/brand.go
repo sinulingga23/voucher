@@ -21,10 +21,10 @@ func (b BrandRepository) Create(ctx context.Context,  createBrand domain.CreateB
 	if err != nil {
 		return nil, err
 	}
-	defer trx.Commit()
 	
+	id := uuid.New().String()
 	result, err := trx.Exec(`INSERT INTO brands (id, name, url_logo, description, address) VALUES (?,?,?,?,?)`,
-		uuid.New().String(),
+		id,
 		createBrand.Name,
 		createBrand.UrlLogo,
 		createBrand.Description,
@@ -34,14 +34,14 @@ func (b BrandRepository) Create(ctx context.Context,  createBrand domain.CreateB
 		return nil, err
 	}
 
-	lastInsertedId, err := result.LastInsertId()
-	if err != nil {
+	rowsAffected, err := result.RowsAffected()
+	if err != nil || rowsAffected == 0 {
 		trx.Rollback()
 		return nil, err
 	}
 
 	createdBrand := &domain.Brand{}
-	row := trx.QueryRow("SELECT id, name, url_logo, description, address FROM brands WHERE id = ?", lastInsertedId)
+	row := trx.QueryRow("SELECT id, name, url_logo, description, address FROM brands WHERE id = ?", id)
 	err = row.Scan(
 		&createdBrand.Id,
 		&createdBrand.Name,
@@ -50,6 +50,10 @@ func (b BrandRepository) Create(ctx context.Context,  createBrand domain.CreateB
 		&createdBrand.Address)
 	if err != nil {
 		trx.Rollback()
+		return nil, err
+	}
+
+	if err := trx.Commit(); err != nil  {
 		return nil, err
 	}
 
